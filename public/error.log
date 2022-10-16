@@ -1,0 +1,1 @@
+[Fri Oct 07 15:10:34.773491 2022] [php:error] [pid 928:tid 1856] [client 127.0.0.1:59226] PHP Fatal error:  Cannot use [] for reading in D:\\xampp\\htdocs\\booking\\app\\Models\\Users.php on line 71, referer: http://dev.booking.com/admin/change-password
