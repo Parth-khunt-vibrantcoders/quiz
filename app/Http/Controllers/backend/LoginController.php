@@ -13,7 +13,9 @@ use Hash;
 class LoginController extends Controller
 {
 
-    public function login(){
+
+
+    public function admin_login(){
         $data['title'] = Config::get('constants.SYSTEM_NAME') . ' || Login';
         $data['description'] = Config::get('constants.SYSTEM_NAME') . ' || Login';
         $data['keywords'] = Config::get('constants.SYSTEM_NAME') . ' || Login';
@@ -36,14 +38,14 @@ class LoginController extends Controller
             'Login.init()'
         );
         if(Config::get('constants.LOGIN_THEME') == 2){
-            return view('backend.pages.login.login_2', $data);    
+            return view('backend.pages.login.login_2', $data);
         }
         return view('backend.pages.login.login', $data);
     }
 
     public function check_login(Request $request){
 
-        if (Auth::guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password'), 'is_deleted'=>'N'])) {
+        if (Auth::guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password'), 'is_deleted'=>'N', 'user_type'=>1])) {
             $loginData = '';
             $request->session()->forget('logindata');
             $loginData = array(

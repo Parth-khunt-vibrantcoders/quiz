@@ -57,7 +57,7 @@
     <style>
         .text-center{
             text-align: center !important;
-            
+
         }
         .theme-color{
             background: #ED4742 !important;

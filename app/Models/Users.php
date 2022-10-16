@@ -15,9 +15,9 @@ class Users extends Model
 {
     use HasFactory;
     protected $table= 'users';
-    
+
     public function update_profile($requestData){
-        
+
         $countUser = Users::where("email",$requestData['email'])
                         ->where("id",'!=',$requestData['edit_id'])
                         ->count();
@@ -26,7 +26,7 @@ class Users extends Model
 
             $objUsers = Users::find($requestData['edit_id']);
             $objUsers->first_name = $requestData['first_name'];
-            $objUsers->last_name = $requestData['last_name'];            
+            $objUsers->last_name = $requestData['last_name'];
             $objUsers->email = $requestData['email'];
             if($requestData['userimage']){
                 $image = $requestData['userimage'];
@@ -36,8 +36,8 @@ class Users extends Model
                 $objUsers->userimage  = $imagename ;
             }
             if($objUsers->save()){
-                $currentRoute = Route::current()->getName();                
-                
+                $currentRoute = Route::current()->getName();
+
                 $request_data = $requestData;
                 unset($request_data['_token']);
                 unset($request_data['profile_avatar_remove']);
@@ -47,7 +47,7 @@ class Users extends Model
                 }
                 $objAudittrails = new Audittrails();
                 $res = $objAudittrails->add_audit('Update','admin/'. $currentRoute , json_encode($request_data) ,'Update Profile' );
-                return true;                
+                return true;
             }else{
                 return "false";
             }
@@ -86,5 +86,29 @@ class Users extends Model
         }else{
             return "password_not_match";
         }
+    }
+
+    public function save_sign_up($requestData){
+        $count = Users::where('users.email', $requestData['email'])->count();
+       if($count == 0){
+            $objUsers = new Users();
+            $objUsers->first_name = $requestData['firstname'];
+            $objUsers->last_name = $requestData['lastname'];
+            $objUsers->email = $requestData['email'];
+            $objUsers->email_verified_at = date('Y-m-d H:i:s');
+            $objUsers->password = Hash::make($requestData['password']);
+            $objUsers->user_type = 2;
+            $objUsers->status = 'Y';
+            $objUsers->is_deleted = 'N';
+            $objUsers->created_at = date('Y-m-d H:i:s');
+            $objUsers->updated_at = date('Y-m-d H:i:s');
+            if($objUsers->save()){
+                return 'true';
+            }else{
+                return 'false';
+            }
+       }else{
+           return 'email_exits';
+       }
     }
 }

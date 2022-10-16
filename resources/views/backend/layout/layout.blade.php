@@ -8,7 +8,7 @@
 		<div id="kt_header_mobile" class="header-mobile align-items-center header-mobile-fixed">
 			<!--begin::Logo-->
 			<a href="index.html">
-				<img alt="Logo" src="{{  asset('public/upload/systemsetting/logo.png') }}" class="max-h-25px"/>
+				<img alt="Logo" src="{{  asset('public/upload/systemsetting/logo-white.png') }}" class="max-h-25px"/>
 			</a>
 			<!--end::Logo-->
 			<!--begin::Toolbar-->

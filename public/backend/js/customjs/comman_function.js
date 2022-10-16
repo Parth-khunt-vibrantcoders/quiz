@@ -221,77 +221,7 @@ function handleFormValidate(form, rules, submitCallback, showToaster) {
     })
 }
 
-function handleFormValidateWithMsg(form, rules, messages, submitCallback, showToaster) {
 
-    var error = $('.alert-danger', form);
-    var success = $('.alert-success', form);
-    form.validate({
-        errorElement: 'span', //default input error message container
-        errorClass: 'help-block', // default input error message class
-        focusInvalid: true, // do not focus the last invalid input
-        ignore: ":hidden",
-        rules: rules,
-        invalidHandler: function(event, validator) { //display error alert on form submit
-            success.hide();
-            error.show();
-
-            //            App.scrollTo(error, -200);
-            if (typeof showToaster !== 'undefined' && showToaster) {
-                Toastr.init('warning', 'Some fields are missing!.', '');
-            }
-            //            Toastr.init('warning', 'Some fields are missing!.', '');
-        },
-        highlight: function(element) { // hightlight error inputs
-            $(element)
-                .closest('.form-control').addClass('has-error'); // set error class to the control group
-            $(element).parent().find('.select2').addClass('has-error');
-        },
-        unhighlight: function(element) { // revert the change done by hightlight
-            $(element).parent().find('.select2').removeClass('has-error');
-            $(element)
-                .closest('.form-control').removeClass('has-error'); // set error class to the control group
-        },
-        success: function(label) {
-            label.closest('.form-control').removeClass('has-error'); // set success class to the control group
-            label.parent().find('.select2').removeClass('has-error');
-        },
-        messages: messages,
-
-        submitHandler: function(form) {
-
-            $(".submitbtn:visible").attr("disabled", "disabled");
-            $("#loader").show();
-            if (typeof submitCallback !== 'undefined' && typeof submitCallback == 'function') {
-                submitCallback(form);
-            } else {
-                handleAjaxFormSubmit(form);
-            }
-            return false;
-        },
-
-        errorPlacement: function(error, element) {
-            var elem = $(element);
-            if (elem.hasClass("select2-hidden-accessible")) {
-                element = $("#select2-" + elem.attr("id") + "-container").parent();
-                error.insertAfter(element);
-            } else {
-                if (elem.hasClass("radio-btn")) {
-                    element = elem.parent().parent();
-                    error.insertAfter(element);
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        },
-    });
-
-    $('.select2me', form).change(function() {
-        form.validate().element($(this)); //revalidate the chosen dropdown value and show error or success message for the input
-    });
-    $('.date-picker .form-control').change(function() {
-        form.validate().element($(this)); //revalidate the chosen dropdown value and show error or success message for the input
-    })
-}
 
 function gritter(title, text, sticky, time) {
     $.gritter.add({
@@ -995,7 +925,12 @@ function handleFormValidateWithMsg(form, rules, messages, submitCallback, showTo
                     element = elem.parent().parent();
                     error.insertAfter(element);
                 } else {
-                    error.insertAfter(element);
+                    if (elem.hasClass("file-input")) {
+                        element = elem.parent().parent().parent();
+                        error.insertAfter(element);
+                    } else {
+                        error.insertAfter(element);
+                    }
                 }
             }
         },
@@ -1296,3 +1231,59 @@ function convert_float(number) {
 }
 
 
+$('body').on('change', '#quiz_type', function(){
+
+    var quiz_type = $(this).val();
+    var data = { quiz_type: quiz_type, _token: $('#_token').val() };
+
+    $.ajax({
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+        },
+        url: baseurl + "common-ajaxcall",
+        data: { 'action': 'change-quiz-type', 'data': data },
+        success: function(data) {
+            var output = JSON.parse(data);
+            var temp_html = '';
+            var html ='<option value="">Select quiz category</option>';
+
+
+            for (var i = 0; i < output.length; i++) {
+                temp_html = '<option value="' + output[i].id + '">' + output[i].name + '</option>';
+                html = html + temp_html;
+            }
+
+            $('#quiz_category').html(html);
+            $('#quiz_select').html(' <option value="">Select quiz</option>');
+        }
+    });
+});
+
+$('body').on('change', '#quiz_category', function(){
+
+    var quiz_category = $(this).val();
+    var data = { quiz_category: quiz_category, _token: $('#_token').val() };
+
+    $.ajax({
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+        },
+        url: baseurl + "common-ajaxcall",
+        data: { 'action': 'change-quiz-category', 'data': data },
+        success: function(data) {
+            var output = JSON.parse(data);
+            var temp_html = '';
+            var html ='<option value="">Select quiz</option>';
+
+
+            for (var i = 0; i < output.length; i++) {
+                temp_html = '<option value="' + output[i].id + '">' + output[i].name + '</option>';
+                html = html + temp_html;
+            }
+
+            $('#quiz_select').html(html);
+        }
+    });
+});

@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\backend\LoginController;
+use App\Http\Controllers\frontend\LoginController as UserloginController;
+use App\Http\Controllers\frontend\QuizLoginController;
+
+
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -26,7 +30,13 @@ Route::get('/clear-cache', function() {
     echo "view is cleared<br>";
 });
 
-Route::get('/', [LoginController::class, 'login'])->name('login');
+Route::get('admin-login', [LoginController::class, 'admin_login'])->name('admin-login');
 Route::post('check-login', [LoginController::class, 'check_login'])->name('check-login');
 
-Route::get('/testing-mail', [LoginController::class, 'testingmail'])->name('testing-mail');
+Route::get('sign-in', [UserloginController::class, 'login'])->name('sign-in');
+Route::post('check-sign-in', [UserloginController::class, 'check_sign_in'])->name('check-sign-in');
+
+Route::get('sign-up', [UserloginController::class, 'sign_up'])->name('sign-up');
+Route::post('save-sign-up', [UserloginController::class, 'save_sign_up'])->name('save-sign-up');
+
+Route::get('/', [QuizLoginController::class, 'list'])->name('home');

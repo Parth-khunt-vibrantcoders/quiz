@@ -43,13 +43,11 @@ class DashboardController extends Controller
                 'My Dashboard' => 'My Dashboard',
             )
         );
-
-         return view('backend.pages.dashboard.dashboard', $data);
-
+        return view('backend.pages.dashboard.dashboard', $data);
     }
 
 
-    
+
     public function update_profile(Request $request){
 
         $data['title'] = Config::get('constants.SYSTEM_NAME') . ' || Update Profile';
@@ -119,7 +117,7 @@ class DashboardController extends Controller
         );
         $data['pluginjs'] = array(
             'toastr/toastr.min.js',
-            'plugins/validate/jquery.validate.min.js',            
+            'plugins/validate/jquery.validate.min.js',
         );
         $data['js'] = array(
             'comman_function.js',
